@@ -72,7 +72,7 @@ struct FloatingDragPreviewPrivate
 	 */
 	void createFloatingWidget();
 };
-// struct LedArrayPanelPrivate
+// struct FloatingDragPreviewPrivate
 
 
 //============================================================================

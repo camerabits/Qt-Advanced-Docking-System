@@ -26,7 +26,7 @@ struct IconProviderPrivate
 	 */
 	IconProviderPrivate(CIconProvider *_public);
 };
-// struct LedArrayPanelPrivate
+// struct IconProviderPrivate
 
 //============================================================================
 IconProviderPrivate::IconProviderPrivate(CIconProvider *_public) :
