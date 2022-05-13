@@ -90,10 +90,11 @@
 static QString featuresString(ads::CDockWidget* DockWidget)
 {
 	auto f = DockWidget->features();
-	return QString("c%1 m%2 f%3")
-		.arg(f.testFlag(ads::CDockWidget::DockWidgetClosable) ? "+" : "-")
-		.arg(f.testFlag(ads::CDockWidget::DockWidgetMovable) ? "+" : "-")
-		.arg(f.testFlag(ads::CDockWidget::DockWidgetFloatable) ? "+" : "-");
+    return QString("c%1 m%2 f%3").arg(
+            (f.testFlag(ads::CDockWidget::DockWidgetClosable) ? "+" : "-"),
+            (f.testFlag(ads::CDockWidget::DockWidgetMovable) ? "+" : "-"),
+            (f.testFlag(ads::CDockWidget::DockWidgetFloatable) ? "+" : "-")
+        );
 }
 
 
@@ -341,7 +342,7 @@ struct MainWindowPrivate
 		DockWidget->setMinimumSizeHintMode(ads::CDockWidget::MinimumSizeHintFromContent);
 		auto ToolBar = DockWidget->createDefaultToolBar();
 		auto Action = ToolBar->addAction(svgIcon(":/adsdemo/images/fullscreen.svg"), "Toggle Fullscreen");
-		QObject::connect(Action, &QAction::triggered, [=]()
+        QObject::connect(Action, &QAction::triggered, DockWidget, [=]()
 			{
 				if (DockWidget->isFullScreen())
 				{
@@ -419,7 +420,7 @@ void MainWindowPrivate::createContent()
 	auto DockArea = DockManager->addDockWidget(ads::CenterDockWidgetArea, DockWidget, TopDockArea);
     // Now we create a action to test resizing of DockArea widget
 	auto Action = ui.menuTests->addAction(QString("Resize %1").arg(DockWidget->windowTitle()));
-	QObject::connect(Action, &QAction::triggered, [DockArea]()
+    QObject::connect(Action, &QAction::triggered, DockArea, [DockArea]()
 	{
 		// Resizing only works, if the Splitter is visible and has a valid
 		// sizes
@@ -445,7 +446,7 @@ void MainWindowPrivate::createContent()
 	auto TitleBar = DockArea->titleBar();
 	int Index = TitleBar->indexOf(TitleBar->tabBar());
 	TitleBar->insertWidget(Index + 1, CustomButton);
-	QObject::connect(CustomButton, &QToolButton::clicked, [=]()
+    QObject::connect(CustomButton, &QToolButton::clicked, _this, [=]()
 	{
 		auto DockWidget = createEditorWidget();
 		DockWidget->setFeature(ads::CDockWidget::DockWidgetDeleteOnClose, true);
@@ -487,7 +488,8 @@ void MainWindowPrivate::createContent()
 #endif
 #endif
 
-	for (auto DockWidget : DockManager->dockWidgetsMap())
+    auto const &dockWidgetsMap = DockManager->dockWidgetsMap();
+    for (auto DockWidget : dockWidgetsMap)
 	{
 		_this->connect(DockWidget, SIGNAL(viewToggled(bool)), SLOT(onViewToggled(bool)));
 		_this->connect(DockWidget, SIGNAL(visibilityChanged(bool)), SLOT(onViewVisibilityChanged(bool)));
@@ -652,8 +654,8 @@ CMainWindow::CMainWindow(QWidget *parent) :
 	connect(d->PerspectiveComboBox, SIGNAL(activated(const QString&)),
 		d->DockManager, SLOT(openPerspective(const QString&)));
  #else
-    connect(d->PerspectiveComboBox, SIGNAL(textActivated(const QString&)),
-        d->DockManager, SLOT(openPerspective(const QString&)));
+    connect(d->PerspectiveComboBox, SIGNAL(textActivated(QString)),
+        d->DockManager, SLOT(openPerspective(QString)));
  #endif
 
 	d->createContent();
