@@ -343,13 +343,15 @@ public:
 	 */
 	const QList<CFloatingDockContainer*> floatingWidgets() const;
 
-	/**
+#ifndef Q_OS_MAC    // on macOS, the floating dock container windows are not always on top of the main window, they can be behind the main window too
+    /**
 	 * This function always return 0 because the main window is always behind
 	 * any floating widget
 	 */
 	unsigned int zOrderIndex() const override;
+#endif
 
-	/**
+    /**
 	 * Saves the current state of the dockmanger and all its dock widgets
 	 * into the returned QByteArray.
 	 * The XmlMode enables / disables the auto formatting for the XmlStreamWriter.

@@ -670,11 +670,12 @@ const QList<CFloatingDockContainer*> CDockManager::floatingWidgets() const
 
 
 //============================================================================
+#ifndef Q_OS_MAC    // on macOS, the floating dock container windows are not always on top of the main window, they can be behind the main window too
 unsigned int CDockManager::zOrderIndex() const
 {
 	return 0;
 }
-
+#endif
 
 //============================================================================
 QByteArray CDockManager::saveState(int version) const
