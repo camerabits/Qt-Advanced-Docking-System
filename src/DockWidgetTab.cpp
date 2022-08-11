@@ -342,6 +342,7 @@ CDockWidgetTab::CDockWidgetTab(CDockWidget* DockWidget, QWidget *parent) :
 	d->DockWidget = DockWidget;
 	d->createLayout();
 	setFocusPolicy(Qt::NoFocus);
+	setAcceptDrops(true);
 	/*if (CDockManager::testConfigFlag(CDockManager::FocusHighlighting))
 	{
 		setFocusPolicy(Qt::ClickFocus);
@@ -353,6 +354,20 @@ CDockWidgetTab::~CDockWidgetTab()
 {
     ADS_PRINT("~CDockWidgetTab()");
 	delete d;
+}
+
+
+//============================================================================
+void CDockWidgetTab::dragEnterEvent(QDragEnterEvent *event)
+{
+	event->acceptProposedAction();
+	dockWidget()->setAsCurrentTab();
+}
+
+void CDockWidgetTab::dropEvent(QDropEvent *event)
+{
+	event->setDropAction(Qt::IgnoreAction);
+	event->accept();
 }
 
 
