@@ -433,7 +433,7 @@ struct FloatingDockContainerPrivate
 		}
 		else
 		{
-			setWindowTitle(qApp->applicationDisplayName());
+			setWindowTitle(floatingContainersTitle());
 		}
 
 		// reflect CurrentWidget's icon if configured to do so, otherwise display application icon as window icon
@@ -453,6 +453,18 @@ struct FloatingDockContainerPrivate
 	 * Handles escape key press when dragging around the floating widget
 	 */
 	void handleEscapeKey();
+
+	/**
+	 * Returns the title used by all FloatingContainer that does not
+	 * reflect the title of the current dock widget.
+	 *
+	 * If not title was set with CDockManager::setFloatingContainersTitle(),
+	 * it returns QGuiApplication::applicationDisplayName().
+	 */
+	static QString floatingContainersTitle()
+	{
+		return CDockManager::floatingContainersTitle();
+	}
 };
 // struct FloatingDockContainerPrivate
 
@@ -949,7 +961,7 @@ void CFloatingDockContainer::moveFloating()
 	case DraggingFloatingWidget:
 		d->updateDropOverlays(QCursor::pos());
 #ifdef Q_OS_MACOS
-		// %%KAB: In OSX when hiding the DockAreaOverlay the application would set
+		// In OSX when hiding the DockAreaOverlay the application would set
 		// the main window as the active window for some reason. This fixes
 		// that by resetting the active window to the floating widget after
 		// updating the overlays.
@@ -990,7 +1002,7 @@ void CFloatingDockContainer::onDockAreasAddedOrRemoved()
 			    SLOT(onDockAreaCurrentChanged(int)));
 			d->SingleDockArea = nullptr;
 		}
-		d->setWindowTitle(qApp->applicationDisplayName());
+		d->setWindowTitle(d->floatingContainersTitle());
 		setWindowIcon(QApplication::windowIcon());
 	}
 }
@@ -1017,7 +1029,7 @@ void CFloatingDockContainer::updateWindowTitle()
 	}
 	else
 	{
-		d->setWindowTitle(qApp->applicationDisplayName());
+		d->setWindowTitle(d->floatingContainersTitle());
 		setWindowIcon(QApplication::windowIcon());
 	}
 }
@@ -1185,7 +1197,7 @@ void CFloatingDockContainer::moveEvent(QMoveEvent *event)
 
 	case DraggingFloatingWidget:
 		d->updateDropOverlays(QCursor::pos());
-		// %%KAB: In OSX when hiding the DockAreaOverlay the application would set
+		// In OSX when hiding the DockAreaOverlay the application would set
 		// the main window as the active window for some reason. This fixes
 		// that by resetting the active window to the floating widget after
 		// updating the overlays.

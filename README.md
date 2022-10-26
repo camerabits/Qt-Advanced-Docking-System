@@ -8,12 +8,13 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/qcfb3cy932jw9mpy/branch/master?svg=true)](https://ci.appveyor.com/project/githubuser0xFFFF/qt-advanced-docking-system/branch/master)
 [![License: LGPL v2.1](https://img.shields.io/badge/License-LGPL%20v2.1-blue.svg)](gnu-lgpl-v2.1.md)
 
-[What's new](https://github.com/githubuser0xFFFF/Qt-Advanced-Docking-System/releases/latest)
-[Documentation](doc/user-guide.md)
-
 Qt Advanced Docking System lets you create customizable layouts using a full
 featured window docking system similar to what is found in many popular
 integrated development environments (IDEs) such as Visual Studio.
+
+- [What's new](https://github.com/githubuser0xFFFF/Qt-Advanced-Docking-System/releases/latest)
+- [Documentation](doc/user-guide.md)
+- Original Repository: https://github.com/githubuser0xFFFF/Qt-Advanced-Stylesheets
 
 [![Video Advanced Docking](doc/advanced-docking_video.png)](https://www.youtube.com/watch?v=7pdNfafg3Qc)
 
@@ -25,6 +26,7 @@ adds the following features:
 - option to close tabs with the middle mouse button
 - `DeleteContentOnClose` flag for dynamic deletion and creation of dock widget
   content
+- improved focus highlighting functionality
 
 The [release 3.7](https://github.com/githubuser0xFFFF/Qt-Advanced-Docking-System/releases/tag/3.7.2)
 adds the following features:
@@ -151,7 +153,7 @@ If this flag is cleared, the widget resizing is deferred until the mouse button 
 
 ### Opaque and non-opaque undocking
 
-By default, opaque undocking is active. That means, as soon as you drag a dock widget or a dock area with a number of dock widgets it will be undocked and moved into a floating widget and then the floating widget will be dragged around. That means undocking will take place immediatelly. You can compare this with opaque splitter resizing. If the flag `OpaqueUndocking` is cleared, then non-opaque undocking is active. In this mode, undocking is more like a standard drag and drop operation. That means, the dragged dock widget or dock area is not undocked immediatelly. Instead, a drag preview widget is created and dragged around to indicate the future position of the dock widget or dock area. The actual dock operation is only executed when the mouse button is released. That makes it possible, to cancel an active drag operation with the escape key.
+By default, opaque undocking is active. That means, as soon as you drag a dock widget or a dock area with a number of dock widgets it will be undocked and moved into a floating widget and then the floating widget will be dragged around. That means undocking will take place immediately. You can compare this with opaque splitter resizing. If the flag `OpaqueUndocking` is cleared, then non-opaque undocking is active. In this mode, undocking is more like a standard drag and drop operation. That means, the dragged dock widget or dock area is not undocked immediately. Instead, a drag preview widget is created and dragged around to indicate the future position of the dock widget or dock area. The actual dock operation is only executed when the mouse button is released. That makes it possible, to cancel an active drag operation with the escape key.
 
 The drag preview widget can be configured by a number of global dock manager flags:
 - `DragPreviewIsDynamic`: if this flag is enabled, the preview will be adjusted dynamically to the drop area
@@ -385,12 +387,14 @@ Taken from the [Qt Blog](https://www.qt.io/blog/qt-design-studio-1.5-beta-releas
 
 [![Qt Design Studio](doc/showcase_qt_design_studio_video.png)](https://youtu.be/za9KBWcFXEw?t=84)
 
-### [CETONI Elements](https://www.cetoni.com/products/qmixelements/)
+### [CETONI Elements](https://cetoni.com/cetoni-elements/)
 
 The CETONI Elements software from [CETONI](https://www.cetoni.com) is a comprehensive,
 plugin-based and modular laboratory automation software for controlling CETONI devices using a joint graphical user interface. The software features a powerful script system to automate processes. The software uses the advanced docking system to give the user the freedom to arrange all the views and windows that are provided by the various plugins.
 
-![CETONI_Elements](doc/showcase_qmix_elements.png)
+[learn more...](https://cetoni.com/cetoni-elements/)
+
+[![CETONI_Elements](doc/showcase_qmix_elements.png)](https://www.youtube.com/watch?v=7pdNfafg3Qc)
 
 ### [ezEditor](https://github.com/ezEngine/ezEngine)
 
@@ -406,13 +410,13 @@ D-Tect X is a X-ray inspection software for industrial radiography. It is a stat
 
 [learn more...](https://www.duerr-ndt.com/products/ndt-software/d-tect-xray-inspection-software.html)
 
-![D-TectX](doc/showcase_d-tect-x.jpg)
+[![D-TectX](doc/showcase_d-tect-x.png)](https://youtu.be/mOor7GmmIJo?t=13)
 
 ### [HiveWE](https://github.com/stijnherfst/HiveWE)
 
 HiveWE is a Warcraft III world editor. It focusses on speed and ease of use,
 especially for large maps where the regular World Editor is often too slow and clunky.
-It has a JASS editor with syntax hightlighting, tabs, code completion and more.
+It has a JASS editor with syntax highlighting, tabs, code completion and more.
 The JASS editor uses the Qt Advanced Docking System for the management and layout
 of the open editor windows.
 
