@@ -343,7 +343,7 @@ public:
 	 */
 	const QList<CFloatingDockContainer*> floatingWidgets() const;
 
-#ifndef Q_OS_MAC    // on macOS, the floating dock container windows are not always on top of the main window, they can be behind the main window too
+#ifndef Q_OS_MAC    // %%KAB: on macOS, the floating dock container windows are not always on top of the main window, they can be behind the main window too
     /**
 	 * This function always return 0 because the main window is always behind
 	 * any floating widget
@@ -541,7 +541,7 @@ public Q_SLOTS:
 	 * This function only has an effect, if the flag CDockManager::FocusStyling
 	 * is enabled
 	 */
-	void setDockWidgetFocused(CDockWidget* DockWidget);
+	void setDockWidgetFocused(ads::CDockWidget* DockWidget); // %%KAB: fix warning: slot arguments need to be fully-qualified
 
     /**
      * hide CDockManager and all floating widgets (See Issue #380). Calling regular QWidget::hide()

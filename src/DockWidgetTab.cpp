@@ -49,7 +49,7 @@
 #include "FloatingDockContainer.h"
 #include "DockOverlay.h"
 #include "DockManager.h"
-#include "IconProvider.h"
+//#include "IconProvider.h"	// %%KAB: removed unused include
 #include "DockFocusController.h"
 
 
@@ -342,7 +342,7 @@ CDockWidgetTab::CDockWidgetTab(CDockWidget* DockWidget, QWidget *parent) :
 	d->DockWidget = DockWidget;
 	d->createLayout();
 	setFocusPolicy(Qt::NoFocus);
-	setAcceptDrops(true);
+	setAcceptDrops(true);	// %%KAB: add drag and drop tab activation support
 	/*if (CDockManager::testConfigFlag(CDockManager::FocusHighlighting))
 	{
 		setFocusPolicy(Qt::ClickFocus);
@@ -358,13 +358,13 @@ CDockWidgetTab::~CDockWidgetTab()
 
 
 //============================================================================
-void CDockWidgetTab::dragEnterEvent(QDragEnterEvent *event)
+void CDockWidgetTab::dragEnterEvent(QDragEnterEvent *event)	// %%KAB: add drag and drop tab activation support
 {
 	event->acceptProposedAction();
 	dockWidget()->setAsCurrentTab();
 }
 
-void CDockWidgetTab::dropEvent(QDropEvent *event)
+void CDockWidgetTab::dropEvent(QDropEvent *event)	// %%KAB: add drag and drop tab activation support
 {
 	event->setDropAction(Qt::IgnoreAction);
 	event->accept();

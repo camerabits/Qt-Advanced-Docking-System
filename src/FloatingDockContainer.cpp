@@ -515,6 +515,15 @@ void FloatingDockContainerPrivate::updateDropOverlays(const QPoint &GlobalPos)
 		return;
 	}
 
+#ifdef Q_OS_LINUX
+	// Prevent display of drop overlays and docking as long as a model dialog
+	// is active
+    if (qApp->activeModalWidget())
+    {
+        return;
+    }
+#endif
+
 	auto Containers = DockManager->dockContainers();
 	CDockContainerWidget *TopContainer = nullptr;
 	for (auto ContainerWidget : Containers)
@@ -656,8 +665,12 @@ CFloatingDockContainer::CFloatingDockContainer(CDockManager *DockManager) :
 				this, &CFloatingDockContainer::onMaximizeRequest);
 	}
 #else
-	setWindowFlags(
-	    Qt::Window | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
+	Qt::WindowFlags wFlags = Qt::Window | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint;	// %%KAB:default window flags
+#ifdef Q_OS_MACOS
+	wFlags |= Qt::Tool;	// %%KAB: make it a utility window on macOS
+	setAttribute(Qt::WA_MacAlwaysShowToolWindow, false);	// %%KAB: set window to hide when app switched out
+#endif
+	setWindowFlags(wFlags);
 	QBoxLayout *l = new QBoxLayout(QBoxLayout::TopToBottom);
 	l->setContentsMargins(0, 0, 0, 0);
 	l->setSpacing(0);
@@ -807,16 +820,26 @@ void CFloatingDockContainer::closeEvent(QCloseEvent *event)
 		return;
 	}
 
+	bool HasOpenDockWidgets = false;
 	for (auto DockWidget : d->DockContainer->openedDockWidgets())
 	{
-		if (DockWidget->features().testFlag(CDockWidget::DockWidgetDeleteOnClose))
+		if (DockWidget->features().testFlag(CDockWidget::DockWidgetDeleteOnClose) || DockWidget->features().testFlag(CDockWidget::CustomCloseHandling))
 		{
-			DockWidget->closeDockWidgetInternal();
+			bool Closed = DockWidget->closeDockWidgetInternal();
+			if (!Closed)
+			{
+				HasOpenDockWidgets = true;
+			}
 		}
 		else
 		{
 			DockWidget->toggleView(false);
 		}
+	}
+
+	if (HasOpenDockWidgets)
+	{
+		return;
 	}
 
 	// In Qt version after 5.9.2 there seems to be a bug that causes the
@@ -926,12 +949,12 @@ void CFloatingDockContainer::moveFloating()
 	case DraggingFloatingWidget:
 		d->updateDropOverlays(QCursor::pos());
 #ifdef Q_OS_MACOS
-		// In OSX when hiding the DockAreaOverlay the application would set
+		// %%KAB: In OSX when hiding the DockAreaOverlay the application would set
 		// the main window as the active window for some reason. This fixes
 		// that by resetting the active window to the floating widget after
 		// updating the overlays.
 		//QApplication::setActiveWindow(this);
-		this->raise();  // raise() seems to work better on macOS
+		this->raise();  // %%KAB: raise() seems to work better on macOS
 #endif
 		break;
 	default:
@@ -1096,6 +1119,7 @@ bool CFloatingDockContainer::event(QEvent *e)
 			ADS_PRINT("FloatingWidget::event Event::NonClientAreaMouseButtonPress" << e->type());
 			d->DragStartPos = pos();
 			d->setState(DraggingMousePressed);
+			setWindowOpacity(0.75);	// %%KAB: make window a bit see-through while dragging
 		}
 	}
 	break;
@@ -1133,6 +1157,7 @@ bool CFloatingDockContainer::event(QEvent *e)
 		{
 			ADS_PRINT("FloatingWidget::event QEvent::NonClientAreaMouseButtonRelease");
 			d->titleMouseReleaseEvent();
+			setWindowOpacity(1.0);	// %%KAB: make window fully opaque when dragging ends
 		}
 		break;
 
@@ -1160,12 +1185,12 @@ void CFloatingDockContainer::moveEvent(QMoveEvent *event)
 
 	case DraggingFloatingWidget:
 		d->updateDropOverlays(QCursor::pos());
-		// In OSX when hiding the DockAreaOverlay the application would set
+		// %%KAB: In OSX when hiding the DockAreaOverlay the application would set
 		// the main window as the active window for some reason. This fixes
 		// that by resetting the active window to the floating widget after
 		// updating the overlays.
 		//QApplication::setActiveWindow(this);
-		this->raise();  // raise() seems to work better on macOS
+		this->raise();  // %%KAB: raise() seems to work better on macOS
 		break;
 	default:
 		break;

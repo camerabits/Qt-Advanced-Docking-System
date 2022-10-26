@@ -45,6 +45,7 @@
 #include <QSettings>
 #include <QMenu>
 #include <QApplication>
+#include <QWindow>
 
 #include "FloatingDockContainer.h"
 #include "DockOverlay.h"
@@ -500,6 +501,16 @@ CDockManager::CDockManager(QWidget *parent) :
 
 #ifdef Q_OS_LINUX
 	window()->installEventFilter(this);
+
+    connect(qApp, &QApplication::focusWindowChanged, [](QWindow* focusWindow)
+    {
+        // bring modal dialogs to foreground to ensure that they are in front of any
+        // floating dock widget
+        if (focusWindow && focusWindow->isModal())
+        {
+            focusWindow->raise();
+        }
+    });
 #endif
 }
 
@@ -670,7 +681,7 @@ const QList<CFloatingDockContainer*> CDockManager::floatingWidgets() const
 
 
 //============================================================================
-#ifndef Q_OS_MAC    // on macOS, the floating dock container windows are not always on top of the main window, they can be behind the main window too
+#ifndef Q_OS_MAC    // %%KAB: on macOS, the floating dock container windows are not always on top of the main window, they can be behind the main window too
 unsigned int CDockManager::zOrderIndex() const
 {
 	return 0;

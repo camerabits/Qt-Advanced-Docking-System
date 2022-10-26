@@ -90,11 +90,11 @@
 static QString featuresString(ads::CDockWidget* DockWidget)
 {
 	auto f = DockWidget->features();
-    return QString("c%1 m%2 f%3").arg(
-            (f.testFlag(ads::CDockWidget::DockWidgetClosable) ? "+" : "-"),
-            (f.testFlag(ads::CDockWidget::DockWidgetMovable) ? "+" : "-"),
-            (f.testFlag(ads::CDockWidget::DockWidgetFloatable) ? "+" : "-")
-        );
+	return QString("c%1 m%2 f%3").arg(	// %%KAB: Fix Use multi-arg instead [clazy-qstring-arg] warning
+			(f.testFlag(ads::CDockWidget::DockWidgetClosable) ? "+" : "-"),
+			(f.testFlag(ads::CDockWidget::DockWidgetMovable) ? "+" : "-"),
+			(f.testFlag(ads::CDockWidget::DockWidgetFloatable) ? "+" : "-")
+	);
 }
 
 
@@ -342,7 +342,7 @@ struct MainWindowPrivate
 		DockWidget->setMinimumSizeHintMode(ads::CDockWidget::MinimumSizeHintFromContent);
 		auto ToolBar = DockWidget->createDefaultToolBar();
 		auto Action = ToolBar->addAction(svgIcon(":/adsdemo/images/fullscreen.svg"), "Toggle Fullscreen");
-        QObject::connect(Action, &QAction::triggered, DockWidget, [=]()
+		QObject::connect(Action, &QAction::triggered, DockWidget, [=]()	// %%KAB: provide object context
 			{
 				if (DockWidget->isFullScreen())
 				{
@@ -420,7 +420,7 @@ void MainWindowPrivate::createContent()
 	auto DockArea = DockManager->addDockWidget(ads::CenterDockWidgetArea, DockWidget, TopDockArea);
     // Now we create a action to test resizing of DockArea widget
 	auto Action = ui.menuTests->addAction(QString("Resize %1").arg(DockWidget->windowTitle()));
-    QObject::connect(Action, &QAction::triggered, DockArea, [DockArea]()
+	QObject::connect(Action, &QAction::triggered, DockArea, [DockArea]()	// %%KAB: provide object context
 	{
 		// Resizing only works, if the Splitter is visible and has a valid
 		// sizes
@@ -446,7 +446,7 @@ void MainWindowPrivate::createContent()
 	auto TitleBar = DockArea->titleBar();
 	int Index = TitleBar->indexOf(TitleBar->tabBar());
 	TitleBar->insertWidget(Index + 1, CustomButton);
-    QObject::connect(CustomButton, &QToolButton::clicked, _this, [=]()
+	QObject::connect(CustomButton, &QToolButton::clicked, _this, [=]()	// %%KAB: provide object context
 	{
 		auto DockWidget = createEditorWidget();
 		DockWidget->setFeature(ads::CDockWidget::DockWidgetDeleteOnClose, true);
@@ -459,7 +459,21 @@ void MainWindowPrivate::createContent()
 	DockManager->addDockWidget(ads::TopDockWidgetArea, createLongTextLabelDockWidget(), RighDockArea);
 	auto BottomDockArea = DockManager->addDockWidget(ads::BottomDockWidgetArea, createLongTextLabelDockWidget(), RighDockArea);
 	DockManager->addDockWidget(ads::CenterDockWidgetArea, createLongTextLabelDockWidget(), RighDockArea);
-	DockManager->addDockWidget(ads::CenterDockWidgetArea, createLongTextLabelDockWidget(), BottomDockArea);
+	auto LabelDockWidget = createLongTextLabelDockWidget();
+	std::cout << "DockWidget " << LabelDockWidget->objectName().toStdString() << std::endl;
+	DockManager->addDockWidget(ads::CenterDockWidgetArea, LabelDockWidget, BottomDockArea);
+
+	// Tests CustomCloseHandling without DeleteOnClose
+	LabelDockWidget->setFeature(ads::CDockWidget::CustomCloseHandling, true);
+	QObject::connect(LabelDockWidget, &ads::CDockWidget::closeRequested, _this, [LabelDockWidget, this]()	// %%KAB: provide object context
+	{
+		int Result = QMessageBox::question(_this, "Custom Close Request",
+			"Do you really want to close this dock widget?");
+		if (QMessageBox::Yes == Result)
+		{
+			LabelDockWidget->closeDockWidget();
+		}
+	});
 
     Action = ui.menuTests->addAction(QString("Set %1 Floating").arg(DockWidget->windowTitle()));
     DockWidget->connect(Action, SIGNAL(triggered()), SLOT(setFloating()));
@@ -488,7 +502,7 @@ void MainWindowPrivate::createContent()
 #endif
 #endif
 
-    auto const &dockWidgetsMap = DockManager->dockWidgetsMap();
+	auto const &dockWidgetsMap = DockManager->dockWidgetsMap();	// %%KAB: fix constness warning
     for (auto DockWidget : dockWidgetsMap)
 	{
 		_this->connect(DockWidget, SIGNAL(viewToggled(bool)), SLOT(onViewToggled(bool)));
@@ -654,8 +668,8 @@ CMainWindow::CMainWindow(QWidget *parent) :
 	connect(d->PerspectiveComboBox, SIGNAL(activated(const QString&)),
 		d->DockManager, SLOT(openPerspective(const QString&)));
  #else
-    connect(d->PerspectiveComboBox, SIGNAL(textActivated(QString)),
-        d->DockManager, SLOT(openPerspective(QString)));
+	connect(d->PerspectiveComboBox, SIGNAL(textActivated(QString)),	// %%KAB: fix Signature is not normalized
+		d->DockManager, SLOT(openPerspective(QString)));	// %%KAB: fix Signature is not normalized
  #endif
 
 	d->createContent();

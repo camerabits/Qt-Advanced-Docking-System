@@ -48,13 +48,13 @@
 
 #include <QGuiApplication>
 #include <QScreen>
-#include <QWindow>
+//#include <QWindow>	// %%KAB: commented out duplicate header include
 
 #include "DockContainerWidget.h"
 #include "DockAreaWidget.h"
 #include "DockManager.h"
 #include "FloatingDockContainer.h"
-#include "DockSplitter.h"
+//#include "DockSplitter.h"	// %%KAB: commented out unused header
 #include "DockComponentsFactory.h"
 #include "ads_globals.h"
 
@@ -555,6 +555,7 @@ void CDockWidget::toggleView(bool Open)
 	{
 		Open = true;
 	}
+
 	// If the dock widget state is different, then we really need to toggle
 	// the state. If we are in the right state, then we simply make this
 	// dock widget the current dock widget
@@ -564,7 +565,7 @@ void CDockWidget::toggleView(bool Open)
 	}
 	else if (Open && d->DockArea)
 	{
-		d->DockArea->setCurrentDockWidget(this);
+		raise();
 	}
 }
 

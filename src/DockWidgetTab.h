@@ -51,7 +51,7 @@ class ADS_EXPORT CDockWidgetTab : public QFrame
 {
 	Q_OBJECT
 	Q_PROPERTY(bool activeTab READ isActiveTab WRITE setActiveTab NOTIFY activeTabChanged)
-	Q_PROPERTY(QSize iconSize READ iconSize WRITE setIconSize)
+	Q_PROPERTY(QSize iconSize READ iconSize WRITE setIconSize)	// %%KAB: missing a NOTIFY iconSizeChanged
 
 private:
 	DockWidgetTabPrivate* d; ///< private data (pimpl)
@@ -64,8 +64,8 @@ private Q_SLOTS:
 	void detachDockWidget();
 
 protected:
-	virtual void dragEnterEvent(QDragEnterEvent *event) override;
-	virtual void dropEvent(QDropEvent *event) override;
+	virtual void dragEnterEvent(QDragEnterEvent *event) override;	// %%KAB: add drag and drop tab activation support
+	virtual void dropEvent(QDropEvent *event) override;				// %%KAB: add drag and drop tab activation support
 	virtual void mousePressEvent(QMouseEvent* ev) override;
 	virtual void mouseReleaseEvent(QMouseEvent* ev) override;
 	virtual void mouseMoveEvent(QMouseEvent* ev) override;
