@@ -58,10 +58,13 @@ private:
 	friend struct DockWidgetTabPrivate;
 	friend class CDockWidget;
 	friend class CDockManager;
+	friend class CAutoHideDockContainer;
 	void onDockWidgetFeaturesChanged();
 
 private Q_SLOTS:
 	void detachDockWidget();
+	void autoHideDockWidget();
+	void onAutoHideToActionClicked();
 
 protected:
 	virtual void dragEnterEvent(QDragEnterEvent *event) override;	// %%KAB: add drag and drop tab activation support

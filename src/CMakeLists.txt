@@ -27,6 +27,11 @@ set(ads_SRCS
     FloatingDragPreview.cpp
     IconProvider.cpp
     DockComponentsFactory.cpp
+    AutoHideSideBar.cpp
+    AutoHideTab.cpp
+    AutoHideDockContainer.cpp
+    PushButton.cpp
+	ResizeHandle.cpp
     ads.qrc
 )
 set(ads_HEADERS
@@ -48,6 +53,11 @@ set(ads_HEADERS
     FloatingDragPreview.h
     IconProvider.h
     DockComponentsFactory.h
+    AutoHideSideBar.h
+    AutoHideTab.h
+    AutoHideDockContainer.h
+    PushButton.h
+	ResizeHandle.h
 )
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 if (UNIX AND NOT APPLE)
