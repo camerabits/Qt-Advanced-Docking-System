@@ -67,4 +67,6 @@ rm -rf ../build_x86_64
 file Debug/libqtadvanceddocking.dylib
 file Release/libqtadvanceddocking.dylib
 
+# need to copy the libs
+
 echo "done" >&2
