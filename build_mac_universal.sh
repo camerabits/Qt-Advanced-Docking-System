@@ -74,8 +74,8 @@ file Release/libqtadvanceddocking.dylib
 cp Debug/libqtadvanceddocking.dylib ../../lib/Debug/bin
 cp Release/libqtadvanceddocking.dylib ../../lib/Release/bin
 # setup symlinks
-ln -s libqtadvanceddocking.dylib ../../lib/Debug/bin/libqtadvanceddocking.3.8.2.dylib
-ln -s libqtadvanceddocking.dylib ../../lib/Release/bin/libqtadvanceddocking.3.8.2.dylib
+ln -fs libqtadvanceddocking.dylib ../../lib/Debug/bin/libqtadvanceddocking.3.8.2.dylib
+ln -fs libqtadvanceddocking.dylib ../../lib/Release/bin/libqtadvanceddocking.3.8.2.dylib
 
 # copy the headers
 cd ../src
